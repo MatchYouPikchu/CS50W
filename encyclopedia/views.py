@@ -28,5 +28,11 @@ def search(request):
             "entry" : util.get_entry(title)
             })
         else:
-            return HttpResponse("Requested page was not found")
-# I can use the in method
+            list=[]
+            entries = util.list_entries()
+            for item in entries:
+                if (title.upper() in item.upper()):
+                    print(f"in item {item}")
+                    list.append(item)
+ 
+    return HttpResponse(list)
