@@ -1,5 +1,6 @@
 from django.http.response import HttpResponse, HttpResponseNotFound
 from django.shortcuts import redirect, render
+from django import forms
 
 from . import util
 
@@ -32,7 +33,19 @@ def search(request):
             entries = util.list_entries()
             for item in entries:
                 if (title.upper() in item.upper()):
-                    print(f"in item {item}")
                     list.append(item)
  
-    return HttpResponse(list)
+        return render(request, "encyclopedia/index.html", {
+        "entries": list
+    })
+
+def create(request):
+
+    if request.method == 'POST':
+        return HttpResponse("test")
+    else:
+        return render(request, "encyclopedia/create.html" )
+
+class NewFileForm(forms.Form):
+    title = forms.CharField(label ="title")
+    markdown = forms.CharField(widget=forms.Textarea)
