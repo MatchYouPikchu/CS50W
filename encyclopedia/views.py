@@ -1,6 +1,7 @@
-from django.http.response import HttpResponse, HttpResponseNotFound
+from django.http.response import HttpResponse, HttpResponseNotAllowed, HttpResponseNotFound, HttpResponseRedirect
 from django.shortcuts import redirect, render
 from django import forms
+from django.urls import reverse
 
 from . import util
 
@@ -42,10 +43,18 @@ def search(request):
 def create(request):
 
     if request.method == 'POST':
-        return HttpResponse("test")
+        form =(NewFileForm(request.POST))
+        if form.is_valid():
+            title = form.cleaned_data["title"]
+            markdown = form.cleaned_data["markdown"]
+            if (util.create_entry(title,markdown) == False):
+                return HttpResponse("Sorry, filename exists, try new one")
+            return HttpResponseRedirect(reverse("title", args = [title]))
     else:
-        return render(request, "encyclopedia/create.html" )
+        return render(request, "encyclopedia/create.html", {
+            "form" : NewFileForm()
+      } )
 
 class NewFileForm(forms.Form):
-    title = forms.CharField(label ="title")
+    title = forms.CharField(label ="Title")
     markdown = forms.CharField(widget=forms.Textarea)

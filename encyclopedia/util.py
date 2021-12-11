@@ -2,6 +2,7 @@ import re
 
 from django.core.files.base import ContentFile
 from django.core.files.storage import default_storage
+from django.http.response import HttpResponse, HttpResponseNotFound
 
 
 def list_entries():
@@ -35,3 +36,16 @@ def get_entry(title):
         return f.read().decode("utf-8")
     except FileNotFoundError:
         return None
+
+def create_entry(title, content):
+    """
+    Creates an entry. When files with the same name exists, function
+    returns an error.
+    """
+    filename = f"entries/{title}.md"
+    if default_storage.exists(filename) == False:
+        default_storage.save(filename, ContentFile(content))
+    else:
+        return False
+
+

@@ -13,8 +13,9 @@ h1 {
 }
 
 textarea {
-    height: auto;
+    height: fit-content;
     width: 80%;
+    resize:none;
 }
 
 .main {
@@ -35,4 +36,8 @@ textarea {
 
 .sidebar h2 {
     margin-top: 5px;
+}
+
+label{
+    display:block;
 }
