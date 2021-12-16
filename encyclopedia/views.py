@@ -2,6 +2,7 @@ from django.http.response import HttpResponse, HttpResponseNotAllowed, HttpRespo
 from django.shortcuts import redirect, render
 from django import forms
 from django.urls import reverse
+from random import choices
 
 from . import util
 
@@ -54,6 +55,31 @@ def create(request):
         return render(request, "encyclopedia/create.html", {
             "form" : NewFileForm()
       } )
+
+def edit(request, title):
+
+    if request.method == 'POST':
+        form = (NewFileForm(request.POST))
+        if form.is_valid():
+            title = form.cleaned_data["title"]
+            markdown = form.cleaned_data["markdown"]
+            util.save_entry(title,markdown)
+            return HttpResponseRedirect(reverse("title", args = [title]))
+
+
+    markdown= util.get_entry(title)
+    formDict = {"title": title, "markdown":markdown}
+    return render(request, "encyclopedia/edit.html",{
+        "form" : NewFileForm(formDict)
+    } )
+
+def random(request):
+
+    title = choices(util.list_entries())
+    return HttpResponseRedirect(reverse("title", args = [title[0]]))
+    
+
+
 
 class NewFileForm(forms.Form):
     title = forms.CharField(label ="Title")

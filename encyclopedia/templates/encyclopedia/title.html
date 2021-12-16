@@ -5,7 +5,9 @@
 {% endblock %}
 
 {% block body %}
-<h1>Title</h1>
+<h1>{{title}}</h1>
 
 {{ entry }}
+
+<a href = "{% url 'edit' title %}"> Edit </a>
 {% endblock %}
