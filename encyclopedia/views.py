@@ -3,7 +3,7 @@ from django.shortcuts import redirect, render
 from django import forms
 from django.urls import reverse
 from random import choices
-
+from markdown2 import markdown
 from . import util
 
 
@@ -16,7 +16,7 @@ def title(request, title):
     if (util.get_entry(title)):
         return render(request,"encyclopedia/title.html" ,{
             "title" : title,
-            "entry" : util.get_entry(title)
+            "entry" : markdown(util.get_entry(title))
             })
     else:
         return HttpResponse("Requested page was not found")
